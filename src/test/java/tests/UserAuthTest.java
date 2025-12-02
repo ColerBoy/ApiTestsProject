@@ -1,6 +1,7 @@
 package tests;
 
 
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.BaseTestCase;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,14 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 import lib.ApiCoreRequests;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
 import org.junit.jupiter.api.DisplayName;
 
 
 @Epic("Authorisation cases")
 @Feature("Authorization")
+@Owner(value = "Максим QA")
+@Issue(value = "TEST-123")
 public class UserAuthTest extends BaseTestCase {
     String cookie;
     String header;

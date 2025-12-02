@@ -1,6 +1,6 @@
 package tests;
 
-import io.qameta.allure.Description;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
@@ -11,11 +11,17 @@ import lib.BaseTestCase;
 import java.util.HashMap;
 import java.util.Map;
 
+@Feature("Тесты удаления пользователя")
+@Owner(value = "Максим QA")
+@Issue(value = "TEST-123")
+@Link(name = "Api", url = "https://playground.learnqa.ru/api/user/")
 public class UserDeleteTest extends BaseTestCase {
     String cookie;
     String token;
     int userIdOnAuth;
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
+
+
     @Test
     @Description("This test login and tries delete user 2")
     @DisplayName("Test negative delete user")
@@ -37,8 +43,8 @@ public class UserDeleteTest extends BaseTestCase {
     }
 
     @Test
-    @Description("This test checks create new user, login and delete user")
     @DisplayName("Test positive changed userData")
+    @Description("This test checks create new user, login and delete user")
     public void createAndDeleteUser(){
         Map<String, String> userData = DataGenerator.getRegistrationData( );
 
