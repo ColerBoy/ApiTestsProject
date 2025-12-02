@@ -18,6 +18,7 @@ import java.util.Map;
 public class UserGetTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
     @Test
+    @Story("Негативный тест")
     @Description("This test checks get information user without auth")
     @DisplayName("Test negative get information user")
     public void testGetUserDataNotAuth(){
@@ -29,6 +30,7 @@ public class UserGetTest extends BaseTestCase {
         Assertions.assertJsonHasNotFields(responseUserData,expectedNotFields);
     }
     @Test
+    @Story("Позитивный тест")
     @Description("This test checks get information after auth")
     @DisplayName("Test positive get information user")
     public void testGetUserDetailsAuthAsSameUser(){ //авторизуемся и проверяем наличие полей в ответе
@@ -49,6 +51,7 @@ public class UserGetTest extends BaseTestCase {
     }
 
     @Test
+    @Story("Негативный тест")
     @Description("This test checks get information user with different id")
     @DisplayName("Test negative get information user")
     public void testGetUserDetailsAuthAsNotSameUser(){ //авторизуемся и пытаемся получить данные другого пользователя

@@ -23,6 +23,7 @@ public class UserDeleteTest extends BaseTestCase {
 
 
     @Test
+    @Story("Негатиный тест")
     @Description("This test login and tries delete user 2")
     @DisplayName("Test negative delete user")
     public void loginUserAndDelete() {
@@ -43,6 +44,7 @@ public class UserDeleteTest extends BaseTestCase {
     }
 
     @Test
+    @Story("Позитивный тест")
     @DisplayName("Test positive changed userData")
     @Description("This test checks create new user, login and delete user")
     public void createAndDeleteUser(){
@@ -67,6 +69,7 @@ public class UserDeleteTest extends BaseTestCase {
         Assertions.assertResponceTextEquals(responseUserData,"User not found");
     }
     @Test
+    @Story("Негативный тест")
     @Description("This test cheks create new user, login for another and delete new user")
     @DisplayName("Test negative delete user")
     public void createAndDeleteOtherUser(){

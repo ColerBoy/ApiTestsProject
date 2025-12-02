@@ -22,6 +22,7 @@ public class UserRegisterTest extends BaseTestCase {
 
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
     @Test
+    @Story("Негативный тест")
     @Description("This test create user with existing email")
     @DisplayName("Test negative register")
     public void testCreateUserWithExistingEmail(){
@@ -40,6 +41,7 @@ public class UserRegisterTest extends BaseTestCase {
 
     }
     @Test
+    @Story("Позитивный тест")
     @Description("This test create new user")
     @DisplayName("Test positive register")
     public void testCreateUserSuccessfully(){
@@ -53,6 +55,7 @@ public class UserRegisterTest extends BaseTestCase {
     }
 
     @Test
+    @Story("Негативный тест")
     @Description("This test create user with incorrect email")
     @DisplayName("Test negative register")
     public void testCreateUserWithIncorrectEmail(){
@@ -69,6 +72,7 @@ public class UserRegisterTest extends BaseTestCase {
     }
 
     @ParameterizedTest
+    @Story("Негативный тест")
     @Description("This test create user without one field")
     @DisplayName("Test negative register")
     @ValueSource(strings = {"email", "password","username","firstName","lastName"})
@@ -85,6 +89,7 @@ public class UserRegisterTest extends BaseTestCase {
     }
 
     @Test
+    @Story("Негативный тест")
     @Description("This test create user with short first name")
     @DisplayName("Test negative register")
     public void testCreateUserWithShortFirstName(){
@@ -101,6 +106,7 @@ public class UserRegisterTest extends BaseTestCase {
     }
 
     @Test
+    @Story("Негативный тест")
     @Description("This test create user with long first name")
     @DisplayName("Test negative register")
     public void testCreateUserWithLongFirstName(){

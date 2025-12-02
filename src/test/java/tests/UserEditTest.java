@@ -19,6 +19,7 @@ import java.util.Map;
 public class UserEditTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
     @Test
+    @Story("Позитивный тест")
     @Description("This test successfully create new user, login and changed first name")
     @DisplayName("Test positive changed userData")
      public void testEditJustCreatedTest(){
@@ -58,6 +59,7 @@ public class UserEditTest extends BaseTestCase {
     }
 
     @Test
+    @Story("Негатиный тест")
     @Description("This test checks error edit data without auth")
     @DisplayName("Test negative changed userData")
     public void testEditWithoutAuth(){
@@ -70,6 +72,7 @@ public class UserEditTest extends BaseTestCase {
     }
 
     @Test
+    @Story("Негатиный тест")
     @Description("This test checks error edit data to incorrect user id")
     @DisplayName("Test negative changed userData")
     public void testEditIncorrectUser(){
@@ -102,6 +105,7 @@ public class UserEditTest extends BaseTestCase {
     }
 
     @Test
+    @Story("Негатиный тест")
     @Description("This test checks error edit data with invalid email")
     @DisplayName("Test negative changed userData")
     public void testEditWithIncorrectEmail(){
@@ -134,6 +138,7 @@ public class UserEditTest extends BaseTestCase {
     }
 
     @Test
+    @Story("Негатиный тест")
     @Description("This test checks error edit data with too short first name")
     @DisplayName("Test negative changed userData")
     public void testEditWithIncorrectFirstName(){
