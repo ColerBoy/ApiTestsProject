@@ -17,6 +17,7 @@ import java.util.Map;
 @Issue(value = "TEST-123")
 public class UserGetTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
+    private final static String URL = "https://playground.learnqa.ru/api/user/";
     @Test
     @Story("Негативный тест")
     @Description("This test checks get information user without auth")
@@ -24,7 +25,7 @@ public class UserGetTest extends BaseTestCase {
     public void testGetUserDataNotAuth(){
 
         Response responseUserData = apiCoreRequests.
-                makeGetRequestWithoutParams("https://playground.learnqa.ru/api/user/2");//пользователь не авторизован
+                makeGetRequestWithoutParams(URL + "2");//пользователь не авторизован
         String[] expectedNotFields={"firstName", "lastName","email"};
         Assertions.assertJsonHasField(responseUserData,"username");
         Assertions.assertJsonHasNotFields(responseUserData,expectedNotFields);
@@ -39,12 +40,12 @@ public class UserGetTest extends BaseTestCase {
          authData.put("password","1234");
 
         Response responseGetAuth = apiCoreRequests.
-                makePostRequest("https://playground.learnqa.ru/api/user/login",authData);
+                makePostRequest(URL + "login",authData);
          String header = this.getHeader(responseGetAuth,"x-csrf-token");
          String cookie = this.getCookie(responseGetAuth,"auth_sid");
 
         Response responseUserData = apiCoreRequests.
-                makeGetRequest("https://playground.learnqa.ru/api/user/2",header,cookie);
+                makeGetRequest(URL + "2",header,cookie);
         String[] expectedFields={"username", "firstName", "lastName","email"};
         Assertions.asserJsonHasFields(responseUserData,expectedFields);
 
@@ -59,12 +60,12 @@ public class UserGetTest extends BaseTestCase {
         authData.put("email","vinkotov@example.com");
         authData.put("password","1234");
         Response responseGetAuth = apiCoreRequests.
-                makePostRequest("https://playground.learnqa.ru/api/user/login",authData);
+                makePostRequest(URL + "login",authData);
         String header = this.getHeader(responseGetAuth,"x-csrf-token");
         String cookie = this.getCookie(responseGetAuth,"auth_sid");
 
         Response responseUserData = apiCoreRequests.
-                makeGetRequest("https://playground.learnqa.ru/api/user/3",header,cookie);
+                makeGetRequest(URL + "3",header,cookie);
         String[] expectedNotFields={"firstName", "lastName","email"};
         Assertions.assertJsonHasNotFields(responseUserData,expectedNotFields);
 

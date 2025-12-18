@@ -25,6 +25,7 @@ public class UserAuthTest extends BaseTestCase {
     String header;
     int userIdOnAuth;
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
+    private final static String URL = "https://playground.learnqa.ru/api/user/";
 
     @BeforeEach
     public void loginUser() {
@@ -33,7 +34,7 @@ public class UserAuthTest extends BaseTestCase {
         authData.put("password", "1234");
 
         Response responseGetAuth = apiCoreRequests
-                .makePostRequest("https://playground.learnqa.ru/api/user/login",authData);
+                .makePostRequest(URL + "login",authData);
         this.cookie = this.getCookie(responseGetAuth, "auth_sid");
         this.header = this.getHeader(responseGetAuth, "x-csrf-token");
         this.userIdOnAuth = this.getIntFromJson(responseGetAuth, "user_id");
@@ -45,7 +46,7 @@ public class UserAuthTest extends BaseTestCase {
     @DisplayName("Test positive auth user")
     public void testAuthUser() {
         Response responseCheckAuth = apiCoreRequests
-                .makeGetRequest("https://playground.learnqa.ru/api/user/auth",this.header,this.cookie);
+                .makeGetRequest(URL + "auth",this.header,this.cookie);
         Assertions.assertJsonByName(responseCheckAuth, "user_id", this.userIdOnAuth);
     }
     @Story("Негативный тест")
@@ -57,13 +58,13 @@ public class UserAuthTest extends BaseTestCase {
 
         if (condition.equals("cookie")){
             Response responseForCheck = apiCoreRequests.makeGetRequestWithCookie(
-                    "https://playground.learnqa.ru/api/user/auth",
+                    URL + "auth",
                     this.cookie
             );
             Assertions.assertJsonByName(responseForCheck, "user_id", 0);
         } else if (condition.equals("headers")){
             Response responseForCheck = apiCoreRequests.makeGetRequestWithToken(
-                    "https://playground.learnqa.ru/api/user/auth",
+                    URL + "auth",
                     this.header
             );
             Assertions.assertJsonByName(responseForCheck, "user_id", 0);

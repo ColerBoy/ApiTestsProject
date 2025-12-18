@@ -19,6 +19,14 @@ public class ApiCoreRequests {
                 .get(url)
                 .andReturn();
     }
+    @Step("Make a GET-request with header")
+    public Response makeGetRequestWithHeader(String url, String header){
+        return given()
+                .filter(new AllureRestAssured())
+                .header("User-Agent", header)
+                .get(url)
+                .andReturn();
+    }
 
     @Step("Make a GET-request with auth cookie only")
     public Response makeGetRequestWithCookie(String url, String cookie){
@@ -66,7 +74,7 @@ public class ApiCoreRequests {
                 .andReturn();
     }
 
-    @Step("Make a Put-request with token, cookie")
+    @Step("Make a Put-request with body")
     public Response makePutRequestWithoutParams(String url,Map<String,String> editData ){
         return given()
                 .filter(new AllureRestAssured())
