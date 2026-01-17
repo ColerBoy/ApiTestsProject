@@ -22,16 +22,16 @@ public class Assertions {
     }
 
 
-    public static void assertResponceTextEquals(Response response, String expectedAnswer){
+    public static void assertResponseTextEquals(Response response, String expectedAnswer){
         assertEquals(expectedAnswer,response.asString(),"Response text is not as expected");
     }
-    public static void assertResponceCodeEquals(Response response, int expectedStatusCode){
+    public static void assertResponseCodeEquals(Response response, int expectedStatusCode){
         assertEquals(expectedStatusCode,response.statusCode(),"Response status code is not as expected");
     }
     public static void assertJsonHasField(Response Response, String expectedFieldName){
         Response.then().assertThat().body("$",hasKey(expectedFieldName));
     }
-    public static void asserJsonHasFields(Response Response, String[] expectedFieldNames){
+    public static void assertJsonHasFields(Response Response, String[] expectedFieldNames){
         for(String expectedFieldName : expectedFieldNames){
             Assertions.assertJsonHasField(Response, expectedFieldName);
         }
@@ -40,9 +40,19 @@ public class Assertions {
         Response.then().assertThat().body("$",not(hasKey(unexpectedFieldName)));
     }
 
-    public static void assertJsonHasNotFields(Response Response, String[] expectedFieldNames){
-        for(String expectedNotFieldName : expectedFieldNames){
-            Assertions.assertJsonHasNotField(Response, expectedNotFieldName);
+    public static void assertJsonHasNotFields(Response Response, String[] unexpectedFieldNames){
+        for(String unexpectedFieldName : unexpectedFieldNames){
+            Assertions.assertJsonHasNotField(Response, unexpectedFieldName);
+        }
+    }
+
+    public static void assertErrorResponseTextEquals(Response response, String expectedError){
+        if (response.asString().startsWith("{") && response.asString().endsWith("}")) {
+            response.then().assertThat().body("$",hasKey("error"));
+            String error = response.jsonPath().getString("error");
+            assertEquals(expectedError, error,"Error message is not as expected");
+        } else {
+            assertEquals(expectedError, response.asString(), "Error message is not as expected");
         }
     }
 }
