@@ -1,4 +1,4 @@
-FROM maven:3.6.3-openjdk-14
+FROM maven:3.9.6-eclipse-temurin-17
 WORKDIR /tests
 COPY . .
 CMD mvn clean test

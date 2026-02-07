@@ -24,7 +24,7 @@
         <allure.version>2.29.0</allure.version>
         <allure.maven.version>2.12.0</allure.maven.version>
         <cucumber.version>5.7.0</cucumber.version>
-        <allure.cucumber.version>2.13.5</allure.cucumber.version>
+        <allure.cucumber.version>${allure.version}</allure.cucumber.version>
     </properties>
 
     <dependencies>

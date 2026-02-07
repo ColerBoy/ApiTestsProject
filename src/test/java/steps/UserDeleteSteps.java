@@ -7,10 +7,7 @@ import io.restassured.response.Response;
 import lib.Assertions;
 import lib.api.UserApiClient;
 
-@Epic("User Management")
-@Feature("Delete User")
-@Owner(value = "Максим QA")
-@Issue(value = "TEST-123")
+
 public class UserDeleteSteps {
     private final TestContext testContext;
     private final UserApiClient userApiClient = new UserApiClient();
@@ -19,9 +16,7 @@ public class UserDeleteSteps {
         this.testContext = testContext;
     }
 
-    @Когда("я пытаюсь удалить пользователя с ID {int}")
-    @Story("Negative")
-    @Description("Этот тест проверяет, что защищенный пользователь (ID 2) не может быть удален.")
+    @Когда("пытается удалить пользователя с ID {int}")
     public void iTryToDeleteUserWithId(int userId) {
         testContext.response = userApiClient.deleteUser(
                 userId,
@@ -30,27 +25,14 @@ public class UserDeleteSteps {
         );
     }
 
-    @Когда("я удаляю этого пользователя")
-    @Story("Positive")
-    @Description("Этот тест проверяет, что пользователь может успешно удалить свой аккаунт.")
-    public void iDeleteThisUser() {
-        userApiClient.deleteUser(
-                testContext.userId,
-                testContext.loginResponse.getToken(),
-                testContext.loginResponse.getCookie()
-        );
-    }
-
-    @Тогда("я не должен быть авторизован под этим пользователем")
+    @Тогда("пользователь удален")
     public void iShouldNotBeAuthorizedAsThisUser() {
         Response responseUserData = userApiClient.getUser(testContext.userId, testContext.loginResponse.getToken(), testContext.loginResponse.getCookie());
         Assertions.assertResponseCodeEquals(responseUserData, 404);
         Assertions.assertResponseTextEquals(responseUserData, "User not found");
     }
 
-    @Когда("я пытаюсь удалить созданного пользователя")
-    @Story("Negative")
-    @Description("Этот тест проверяет, что пользователь не может удалить аккаунт другого пользователя.")
+    @Когда("удаляет созданного пользователя")
     public void iTryToDeleteTheCreatedUser() {
         testContext.response = userApiClient.deleteUser(
                 testContext.userId,

@@ -16,7 +16,7 @@ public class CommonSteps {
         this.testContext = testContext;
     }
 
-    @Когда("я создаю и логинюсь как новый пользователь")
+    @Когда("пользователь регистрируется и авторизуется")
     public void iCreateAndLoginAsNewUser() {
         CreateUserRequest createUserData = DataGenerator.getRegistrationData().build();
         Response createResponse = userApiClient.createUser(createUserData);
@@ -24,29 +24,24 @@ public class CommonSteps {
         testContext.loginResponse = userApiClient.login(createUserData.getEmail(), createUserData.getPassword());
     }
 
-    @Тогда("я должен получить код ответа {int}")
+
+    @Тогда("пользователь получает код ответа {int}")
     public void iShouldGetStatusCode(int statusCode) {
         Assertions.assertResponseCodeEquals(testContext.response, statusCode);
     }
 
-    @Тогда("тело ответа должно быть {string}")
+    @Тогда("тело ответа {string}")
     public void responseBodyShouldBe(String responseBody) {
         Assertions.assertResponseTextEquals(testContext.response, responseBody);
     }
 
-    @Когда("я логинюсь как {string} с паролем {string}")
+    @Когда("пользователь авторизуется как {string} с паролем {string}")
     public void iLoginAsWithPassword(String email, String password) {
         testContext.loginResponse = userApiClient.login(email, password);
     }
 
-    @Когда("я создаю нового пользователя")
-    public void iCreateNewUser() {
-        CreateUserRequest createUserData = DataGenerator.getRegistrationData().build();
-        Response createResponse = userApiClient.createUser(createUserData);
-        testContext.userId = createResponse.jsonPath().getInt("id");
-    }
 
-    @Тогда("сообщение об ошибке должно быть {string}")
+    @Тогда("сообщение об ошибке {string}")
     public void errorMessageShouldBe(String errorMessage) {
         Assertions.assertErrorResponseTextEquals(testContext.response, errorMessage);
     }

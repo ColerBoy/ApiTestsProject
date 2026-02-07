@@ -9,10 +9,7 @@ import lib.api.requests.CreateUserRequest;
 
 import static org.hamcrest.Matchers.hasKey;
 
-@Epic("User Management")
-@Feature("User Registration")
-@Owner(value = "Максим QA")
-@Issue(value = "TEST-123")
+
 public class UserRegisterSteps {
 
     private final TestContext testContext;
@@ -22,9 +19,7 @@ public class UserRegisterSteps {
         this.testContext = testContext;
     }
 
-    @Когда("я создаю нового пользователя с валидными данными")
-    @Story("Positive")
-    @Description("Этот тест проверяет, что новый пользователь может быть успешно создан.")
+    @Когда("регистрируется новый пользователь")
     public void iCreateNewUserWithValidData() {
         CreateUserRequest userData = DataGenerator.getRegistrationData().build();
         testContext.response = userApiClient.createUser(userData);
@@ -35,17 +30,13 @@ public class UserRegisterSteps {
         testContext.response.then().assertThat().body("$", hasKey(field));
     }
 
-    @Когда("я создаю нового пользователя с email {string}")
-    @Story("Negative")
-    @Description("Этот тест проверяет, что пользователь не может быть создан с уже существующим email.")
+    @Когда("пользователь регистрируется с email {string}")
     public void iCreateNewUserWithEmail(String email) {
         CreateUserRequest userData = DataGenerator.getRegistrationData().withEmail(email).build();
         testContext.response = userApiClient.createUser(userData);
     }
 
-    @Когда("я создаю нового пользователя без поля {string}")
-    @Story("Negative")
-    @Description("Этот тест проверяет, что пользователь не может быть создан без одного из обязательных полей.")
+    @Когда("регистрируется пользователь без поля {string}")
     public void iCreateNewUserWithoutField(String missingField) {
         CreateUserRequest.Builder builder = DataGenerator.getRegistrationData();
 
@@ -70,9 +61,7 @@ public class UserRegisterSteps {
         testContext.response = userApiClient.createUser(builder.build());
     }
 
-    @Когда("я создаю нового пользователя с именем {string}")
-    @Story("Negative")
-    @Description("Этот тест проверяет, что пользователь не может быть создан с именем, которое слишком короткое или слишком длинное.")
+    @Когда("регистрируется пользователь с именем {string}")
     public void iCreateNewUserWithFirstName(String firstName) {
         CreateUserRequest userData = DataGenerator.getRegistrationData().withFirstName(firstName).build();
         testContext.response = userApiClient.createUser(userData);

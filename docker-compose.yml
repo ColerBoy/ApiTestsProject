@@ -4,6 +4,6 @@ services:
   test_runner:
     build: .
     image: java_api_tests
-    container_name: java_runner_works
+    container_name: java_runner_work
     volumes:
       - .:/tests/

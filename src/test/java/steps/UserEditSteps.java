@@ -9,10 +9,7 @@ import lib.api.requests.CreateUserRequest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Epic("User Management")
-@Feature("Edit User")
-@Owner(value = "Максим QA")
-@Issue(value = "TEST-123")
+
 public class UserEditSteps {
     private final TestContext testContext;
     private final UserApiClient userApiClient = new UserApiClient();
@@ -21,9 +18,7 @@ public class UserEditSteps {
         this.testContext = testContext;
     }
 
-    @Когда("я меняю имя на {string}")
-    @Story("Positive")
-    @Description("Этот тест проверяет, что пользователь может успешно отредактировать свое имя.")
+    @Когда("меняет имя на {string}")
     public void iChangeTheNameTo(String newName) {
         CreateUserRequest editData = new CreateUserRequest.Builder().withFirstName(newName).build();
         testContext.response = userApiClient.editUser(
@@ -44,17 +39,13 @@ public class UserEditSteps {
         assertEquals(newName, userResponse.jsonPath().getString("firstName"), "The first name was not updated.");
     }
 
-    @Когда("я пытаюсь изменить имя на {string} без аутентификации")
-    @Story("Negative")
-    @Description("Этот тест проверяет, что данные пользователя не могут быть отредактированы без аутентификации.")
+    @Когда("пытается изменить имя на {string} без аутентификации")
     public void iTryToChangeTheNameToWithoutAuthentication(String newName) {
         CreateUserRequest editData = new CreateUserRequest.Builder().withFirstName(newName).build();
         testContext.response = userApiClient.editUser(testContext.userId, editData);
     }
 
-    @Когда("я пытаюсь изменить имя другого пользователя на {string}")
-    @Story("Negative")
-    @Description("Этот тест проверяет, что пользователь не может редактировать данные другого пользователя.")
+    @Когда("пытается изменить имя другого пользователя на {string}")
     public void iTryToChangeTheNameOfAnotherUserTo(String newName) {
         CreateUserRequest editData = new CreateUserRequest.Builder().withFirstName(newName).build();
         testContext.response = userApiClient.editUser(
@@ -65,9 +56,7 @@ public class UserEditSteps {
         );
     }
 
-    @Когда("я пытаюсь изменить email на {string}")
-    @Story("Negative")
-    @Description("Этот тест проверяет, что пользователь не может изменить свой email на невалидный.")
+    @Когда("пытается изменить email на {string}")
     public void iTryToChangeTheEmailTo(String newEmail) {
         CreateUserRequest editData = new CreateUserRequest.Builder().withEmail(newEmail).build();
         testContext.response = userApiClient.editUser(

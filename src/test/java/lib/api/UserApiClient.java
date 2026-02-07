@@ -1,7 +1,5 @@
 package lib.api;
 
-import io.qameta.allure.Step;
-import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -23,11 +21,9 @@ public class UserApiClient {
 
     private RequestSpecification getReqSpec() {
         return given()
-                .filter(new AllureRestAssured())
                 .baseUri(Configuration.getBaseUrl());
     }
 
-    @Step("Login with user credentials")
     public LoginResponse login(String email, String password) {
         Map<String, String> body = new HashMap<>();
         body.put("email", email);
@@ -41,7 +37,6 @@ public class UserApiClient {
         return new LoginResponse(response);
     }
 
-    @Step("Authenticate with token and cookie")
     public Response authenticate(String token, String cookie) {
         return getReqSpec()
                 .header(new Header(CSRF_TOKEN_HEADER, token))
@@ -50,7 +45,6 @@ public class UserApiClient {
                 .andReturn();
     }
 
-    @Step("Authenticate with cookie only")
     public Response authenticateWithCookie(String cookie) {
         return getReqSpec()
                 .cookie(AUTH_COOKIE_NAME, cookie)
@@ -58,7 +52,6 @@ public class UserApiClient {
                 .andReturn();
     }
 
-    @Step("Authenticate with token only")
     public Response authenticateWithToken(String token) {
         return getReqSpec()
                 .header(new Header(CSRF_TOKEN_HEADER, token))
@@ -66,7 +59,6 @@ public class UserApiClient {
                 .andReturn();
     }
 
-    @Step("Create a new user")
     public Response createUser(CreateUserRequest userData) {
         return getReqSpec()
                 .body(userData)
@@ -74,7 +66,6 @@ public class UserApiClient {
                 .andReturn();
     }
 
-    @Step("Get user data")
     public Response getUser(int userId, String token, String cookie) {
         return getReqSpec()
                 .header(new Header(CSRF_TOKEN_HEADER, token))
@@ -83,14 +74,12 @@ public class UserApiClient {
                 .andReturn();
     }
 
-    @Step("Get user data without authentication")
     public Response getUser(int userId) {
         return getReqSpec()
                 .get(USER_ENDPOINT + userId)
                 .andReturn();
     }
 
-    @Step("Edit user data")
     public Response editUser(int userId, String token, String cookie, CreateUserRequest userData) {
         return getReqSpec()
                 .header(new Header(CSRF_TOKEN_HEADER, token))
@@ -100,7 +89,6 @@ public class UserApiClient {
                 .andReturn();
     }
 
-    @Step("Edit user data without authentication")
     public Response editUser(int userId, CreateUserRequest userData) {
         return getReqSpec()
                 .body(userData)
@@ -108,7 +96,6 @@ public class UserApiClient {
                 .andReturn();
     }
 
-    @Step("Delete user")
     public Response deleteUser(int userId, String token, String cookie) {
         return getReqSpec()
                 .header(new Header(CSRF_TOKEN_HEADER, token))
