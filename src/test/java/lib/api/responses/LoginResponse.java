@@ -4,7 +4,7 @@ package lib.api.responses;
 import io.restassured.response.Response;
 
 public class LoginResponse {
-    private final int userId;
+    private final Integer userId;
     private final String token;
     private final String cookie;
 
