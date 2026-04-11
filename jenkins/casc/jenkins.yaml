@@ -1,0 +1,23 @@
+jenkins:
+  systemMessage: "API Tests CI server"
+  numExecutors: 2
+  mode: NORMAL
+
+jobs:
+  - script: >
+      pipelineJob('api-tests-pipeline') {
+        description('Прогон API-тестов + Allure отчёт')
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote {
+                  url('file:///workspace/project')
+                }
+                branch('*/cicd')
+              }
+            }
+            scriptPath('Jenkinsfile')
+          }
+        }
+      }

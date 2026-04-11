@@ -1,4 +1,4 @@
-version: "3"
+version: "3.9"
 
 services:
   test_runner:
@@ -6,4 +6,22 @@ services:
     image: java_api_tests
     container_name: java_runner_work
     volumes:
-      - .:/tests/
+      - .:/tests
+    profiles: ["tests"]
+
+  jenkins:
+    build:
+      context: ./jenkins
+    container_name: api_tests_jenkins
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    environment:
+      JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - ./:/workspace/project
+
+volumes:
+  jenkins_home:

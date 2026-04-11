@@ -1,0 +1,5 @@
+configuration-as-code:1903.v004d553d2152
+workflow-aggregator:600.vb_57cdd26fdd7
+git:5.7.0
+job-dsl:1.93
+allure-jenkins-plugin:2.32.0

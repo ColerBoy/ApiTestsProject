@@ -1,5 +1,14 @@
-# Set UTF-8 encoding for proper character display
-chcp 65001
+param(
+    [switch]$SkipServe,
+    [switch]$Ci
+)
+
+if (-not $Ci) {
+    # Set UTF-8 encoding for proper character display in interactive terminal
+    chcp 65001 > $null
+}
+
+$ErrorActionPreference = "Stop"
 
 # Define the project root as the current directory (where the script is run)
 $projectRoot = Get-Location
@@ -16,11 +25,11 @@ mvn clean verify
 if (Test-Path -Path $historyFolder) {
     $historySource = Join-Path -Path $historyFolder -ChildPath "history"
     $historyDestination = Join-Path -Path $allureResultsFolder -ChildPath "history"
+
     if (Test-Path -Path $historySource) {
         Write-Host "Copying previous history to allure-results for trend continuity..."
-        # Ensure the destination directory exists
         if (-not (Test-Path -Path $allureResultsFolder)) {
-            New-Item -Path $allureResultsFolder -ItemType Directory -Force
+            New-Item -Path $allureResultsFolder -ItemType Directory -Force | Out-Null
         }
         Copy-Item -Path $historySource -Destination $historyDestination -Recurse -Force
     } else {
@@ -38,13 +47,17 @@ mvn allure:report
 $newHistorySource = Join-Path -Path $allureReportFolder -ChildPath "history"
 if (Test-Path -Path $newHistorySource) {
     Write-Host "Updating history backup with new history data..."
-    # Ensure the backup folder exists
     if (-not (Test-Path -Path $historyFolder)) {
-        New-Item -Path $historyFolder -ItemType Directory -Force
+        New-Item -Path $historyFolder -ItemType Directory -Force | Out-Null
     }
     Copy-Item -Path $newHistorySource -Destination $historyFolder -Recurse -Force
 } else {
     Write-Host "No new history data generated in report."
+}
+
+if ($SkipServe) {
+    Write-Host "SkipServe enabled: report is generated, not starting allure:serve."
+    exit 0
 }
 
 # Step 5: Serve the report
@@ -52,7 +65,7 @@ Write-Host "Serving Allure report with 'mvn allure:serve'... (Press Ctrl+C to st
 try {
     mvn allure:serve
 } finally {
-# Step 6: Clean up lingering Allure server process https://github.com/allure-framework/allure-maven/issues/245
+    # Step 6: Clean up lingering Allure server process
     Write-Host "Cleaning up lingering Allure server process..."
     Get-Process | Where-Object { $_.Path -like "*java*" -and $_.CommandLine -like "*allure*" } | Stop-Process -Force -ErrorAction SilentlyContinue
     Write-Host "Cleanup completed."
