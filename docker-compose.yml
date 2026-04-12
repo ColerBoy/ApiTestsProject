@@ -1,9 +1,30 @@
 version: "3"
 
 services:
+  # Ваш существующий сервис для тестов (для локального запуска)
   test_runner:
     build: .
     image: java_api_tests
     container_name: java_runner_work
     volumes:
       - .:/tests/
+      - maven_repo:/root/.m2 # Кэшируем зависимости Maven
+
+  # Добавляем Jenkins для автоматизации
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins_master
+    user: root # Нужно для доступа к docker.sock и выполнения команд в Jenkins
+    ports:
+      - "8080:8080" # Интерфейс Jenkins
+      - "50000:50000" # Порт для агентов
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock # Даем Jenkins доступ к докеру хоста
+      - .:/workspace # Монтируем проект прямо в Jenkins (для простых пайплайнов)
+      - maven_repo:/root/.m2 # Единый кэш зависимостей для всех
+    restart: always
+
+volumes:
+  jenkins_home:
+  maven_repo:
