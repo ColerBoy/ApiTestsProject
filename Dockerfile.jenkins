@@ -1,27 +1,16 @@
 FROM jenkins/jenkins:lts
 USER root
 
-# 1. Устанавливаем Docker CLI
+# 1. Устанавливаем Docker CLI для управления контейнерами
 RUN apt-get update && \
-    apt-get install -y ca-certificates curl gnupg lsb-release unzip && \
+    apt-get install -y ca-certificates curl gnupg lsb-release && \
     mkdir -p /etc/apt/keyrings && \
     curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
     apt-get update && \
     apt-get install -y docker-ce-cli
 
-# 2. Устанавливаем Allure CLI вручную в систему
-RUN curl -o allure-2.29.0.tgz -L https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz && \
-    tar -zxvf allure-2.29.0.tgz -C /opt/ && \
-    ln -s /opt/allure-2.29.0/bin/allure /usr/bin/allure && \
-    rm allure-2.29.0.tgz
-
-# 3. Устанавливаем плагины
+# 2. Устанавливаем плагины Docker Workflow и Allure
 RUN jenkins-plugin-cli --plugins "docker-workflow allure-jenkins-plugin"
-
-# 4. Автоматическая настройка Allure в Jenkins (Groovy script)
-# Это избавит от ошибки "No Allure CLI installation found"
-RUN mkdir -p /usr/share/jenkins/ref/init.groovy.d
-COPY init-allure.groovy /usr/share/jenkins/ref/init.groovy.d/init-allure.groovy
 
 USER jenkins

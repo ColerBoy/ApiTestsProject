@@ -1,18 +1,17 @@
 pipeline {
-    agent none // Не привязываемся к агенту глобально
+    // Весь пайплайн будет бежать в вашем Docker-контейнере с тестами
+    agent {
+        dockerfile {
+            filename 'Dockerfile'
+            // Кэшируем Maven, чтобы тесты не качали пол-интернета каждый раз
+            args '-v maven_repo:/root/.m2'
+        }
+    }
 
     stages {
         stage('Прогон тестов') {
-            agent {
-                // Тесты бегут в вашем Docker-контейнере
-                dockerfile {
-                    filename 'Dockerfile'
-                    additionalBuildArgs  '--build-arg MAVEN_CONFIG=/root/.m2'
-                    args '-v maven_repo:/root/.m2'
-                }
-            }
             steps {
-                echo '=== Запуск тестов в изолированном Docker-контейнере ==='
+                echo '=== Запуск тестов через скрипт ==='
                 sh 'chmod +x run-allure.sh && ./run-allure.sh'
             }
         }
@@ -20,19 +19,9 @@ pipeline {
 
     post {
         always {
-            // Публикация отчета происходит на мастере Jenkins, где установлен Allure CLI
-            // В новых версиях Jenkins мастер называется 'built-in'
-            node('built-in') { 
-                echo '=== Публикация Allure отчета на мастере ==='
-                allure([
-                    commandline: 'allure',
-                    includeProperties: false,
-                    jdk: '',
-                    properties: [],
-                    reportBuildPolicy: 'ALWAYS',
-                    results: [[path: "target/allure-results"]]
-                ])
-            }
+            echo '=== Публикация Allure отчета ==='
+            // Ссылка на отчет (будет видна в сайдбаре джобы)
+            allure includeProperties: false, results: [[path: 'target/allure-results']]
         }
     }
 }
