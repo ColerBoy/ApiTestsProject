@@ -7,6 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile.jenkins
     container_name: jenkins_master
+    user: root # Важно для работы с томами и системными папками
     ports:
       - "8080:8080"
       - "50000:50000"
