@@ -22,9 +22,10 @@ services:
       - "50000:50000" # Порт для агентов
     volumes:
       - jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock # Даем Jenkins доступ к докеру хоста
-      - .:/workspace # Монтируем проект прямо в Jenkins
-      - maven_repo:/root/.m2 # Единый кэш зависимостей для всех
+      - /var/run/docker.sock:/var/run/docker.sock
+      - .:/workspace
+      - ./init-allure.groovy:/var/jenkins_home/init.groovy.d/init-allure.groovy:ro # Пробрасываем скрипт напрямую
+      - maven_repo:/root/.m2
     restart: always
 
 volumes:
