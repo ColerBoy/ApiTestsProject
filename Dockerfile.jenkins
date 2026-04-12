@@ -1,16 +1,18 @@
-FROM jenkins/jenkins:lts
+FROM jenkins/jenkins:lts-jdk17
 USER root
 
-# 1. Устанавливаем Docker CLI для управления контейнерами
+# 1. Устанавливаем Maven и вспомогательные утилиты
 RUN apt-get update && \
-    apt-get install -y ca-certificates curl gnupg lsb-release && \
-    mkdir -p /etc/apt/keyrings && \
-    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
-    apt-get update && \
-    apt-get install -y docker-ce-cli
+    apt-get install -y maven wget unzip && \
+    apt-get clean
 
-# 2. Устанавливаем плагины Docker Workflow и Allure
-RUN jenkins-plugin-cli --plugins "docker-workflow allure-jenkins-plugin"
+# 2. Устанавливаем Allure CLI (версия 2.29.0)
+RUN wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz && \
+    tar -zxvf allure-2.29.0.tgz -C /opt/ && \
+    ln -s /opt/allure-2.29.0/bin/allure /usr/bin/allure && \
+    rm allure-2.29.0.tgz
+
+# 3. Устанавливаем плагин Allure
+RUN jenkins-plugin-cli --plugins "allure-jenkins-plugin workflow-aggregator"
 
 USER jenkins

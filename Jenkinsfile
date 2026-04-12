@@ -1,17 +1,13 @@
 pipeline {
-    // Весь пайплайн будет бежать в вашем Docker-контейнере с тестами
-    agent {
-        dockerfile {
-            filename 'Dockerfile'
-            // Кэшируем Maven, чтобы тесты не качали пол-интернета каждый раз
-            args '-v maven_repo:/root/.m2'
-        }
-    }
+    // Весь пайплайн теперь бежит прямо на мастере Jenkins
+    // Где мы уже установили Java, Maven и Allure
+    agent any 
 
     stages {
         stage('Прогон тестов') {
             steps {
-                echo '=== Запуск тестов через скрипт ==='
+                echo '=== Шаг 1: Запуск API тестов (Maven) ==='
+                // Просто запускаем команду. Код проекта уже в воркспейсе.
                 sh 'chmod +x run-allure.sh && ./run-allure.sh'
             }
         }
@@ -19,9 +15,17 @@ pipeline {
 
     post {
         always {
-            echo '=== Публикация Allure отчета ==='
-            // Ссылка на отчет (будет видна в сайдбаре джобы)
-            allure includeProperties: false, results: [[path: 'target/allure-results']]
+            echo '=== Шаг 2: Генерация и публикация Allure отчета ==='
+            script {
+                // Мы используем плагин Allure. Он сам подхватит результаты из target/allure-results
+                allure([
+                    includeProperties: false,
+                    jdk: '',
+                    properties: [],
+                    reportBuildPolicy: 'ALWAYS',
+                    results: [[path: 'target/allure-results']]
+                ])
+            }
         }
     }
 }
